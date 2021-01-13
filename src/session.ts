@@ -1,10 +1,10 @@
 import cookie from "js-cookie";
-
 import { newSession, getCampaign, isExpired, resetAtMidnight } from "./utils";
 
 const cookieDuration = 30 * 60000; // mins * millisecs in a minute
 const expires = Date.now() + cookieDuration;
 const currSession = cookie.getJSON("instaSession");
+let updateAction = "";
 
 const defaultSession = {
   id: "awd34!@a754",
@@ -30,16 +30,19 @@ const updateSession = (currSession: {
   referrer: string;
   campaign: string;
 }): void => {
+  let updateAction = "";
   // update campaign
   const campaign = getCampaign(document as Document);
   if (campaign !== null && campaign !== currSession.campaign) {
     currSession.id = newSession(currSession.id);
     currSession.campaign = campaign;
+    updateAction = " (Campaign)";
   }
 
   //update expiration
   if (isExpired(currSession.expiration as string)) {
     currSession.id = newSession(currSession.id);
+    updateAction = " (Expired)";
   }
   currSession = {
     ...currSession,
@@ -47,7 +50,11 @@ const updateSession = (currSession: {
     expiration: new Date(expires).toString(),
   };
   cookie.set("instaSession", currSession);
-  console.log("Updated session: %o", cookie.getJSON("instaSession"));
+  console.log(
+    "Updated session%s:%o",
+    updateAction,
+    cookie.getJSON("instaSession")
+  );
 };
 
 const newDaySession = (currSession: {
