@@ -1,14 +1,13 @@
 import cookie from "js-cookie";
+import * as constants from "./constants";
 import { newSession, getCampaign, isExpired, resetAtMidnight } from "./utils";
 
-const cookieDuration = 30 * 60000; // mins * millisecs in a minute
-const expires = Date.now() + cookieDuration;
 const currSession = cookie.getJSON("instaSession");
 let updateAction = "";
 
 const defaultSession = {
   id: "awd34!@a754",
-  expiration: new Date(expires).toString(),
+  expiration: new Date(constants.expires).toString(),
   referrer: document.referrer,
   campaign: "summer_mailer",
 };
@@ -47,7 +46,7 @@ const updateSession = (currSession: {
   currSession = {
     ...currSession,
     referrer: document.referrer,
-    expiration: new Date(expires).toString(),
+    expiration: new Date(constants.expires).toString(),
   };
   cookie.set("instaSession", currSession);
   console.log(
@@ -66,7 +65,7 @@ const newDaySession = (currSession: {
   currSession = {
     ...currSession,
     id: newSession(currSession.id),
-    expiration: new Date(expires).toString(),
+    expiration: new Date(constants.expires).toString(),
   };
 
   cookie.set("instaSession", currSession);
@@ -89,5 +88,4 @@ export {
   updateSession,
   newDaySession,
   defaultSession,
-  expires,
 };
