@@ -3,13 +3,43 @@
   <head>
     <meta charset="UTF-8" />
     <title>Insticator Test</title>
+    <style>
+      body {
+        font-family: arial;
+        line-height: 1.3;
+        color: #1a1a1a;
+      }
+    </style>
   </head>
   <body>
     <h1>Test page 2</h1>
-    <a href="index.html">Back to Test Page 1</a><br />
-    <a href="index.html?campaign=spring_mailer"
-      >Back to Test Page 1 with the Spring campaign</a
-    >
+    <nav>
+      <a href="index.html">Back to Test Page 1</a><br />
+      <a href="index.html?campaign=spring_mailer"
+        >Back to Test Page 1 with the Spring campaign</a
+      >
+    </nav>
+    <p>
+      Clicking between this page and <a href="index.html">Test page 1</a> will
+      initiate the actions to update the <code>intsiSession</code> cookie.<br />
+      Open the browser console to see the current session data change as you :
+    </p>
+    <ul>
+      <li>navigate the session expiration will update</li>
+      <li>reload after the session expires to see the session id change</li>
+      <li>
+        navigate to a url with a new campaign to see the session id change
+        (we've provided handy links!)
+      </li>
+      <li>
+        keep the page open while midnight occurs to see a new session start with
+        no pageload
+      </li>
+      <li>
+        clear cookies and reload to see a fresh session start (with the current
+        campaign if there is one)
+      </li>
+    </ul>
     <script src="InsticatorSession.js"></script>
   </body>
 </html>
