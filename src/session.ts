@@ -1,14 +1,10 @@
 import cookie from "js-cookie";
 
+import { newSession, getCampaign, isExpired, resetAtMidnight } from "./utils";
+
 const cookieDuration = 30 * 60000; // mins * millisecs in a minute
 const expires = Date.now() + cookieDuration;
-const currSession: {
-  id: string;
-  expiration: string;
-  referrer: string;
-  campaign: string;
-} = cookie.getJSON("instaSession");
-let sessionCtr = 0;
+const currSession = cookie.getJSON("instaSession");
 
 const defaultSession = {
   id: "awd34!@a754",
@@ -16,11 +12,16 @@ const defaultSession = {
   referrer: document.referrer,
   campaign: "summer_mailer",
 };
-// const currSession = cookie.getJSON("instaSession");
+
 const setDefaultSession = () => {
-  cookie.set("instaSession", defaultSession, {
-    expires: new Date(expires),
-  });
+  const campaign = getCampaign(document as Document);
+  const campaignStr = campaign ? campaign : defaultSession.campaign;
+  let firstSession = {
+    ...defaultSession,
+    campaign: campaignStr,
+  };
+  cookie.set("instaSession", firstSession);
+  console.log("Fist session: %o", cookie.getJSON("instaSession"));
 };
 
 const updateSession = (currSession: {
@@ -30,26 +31,23 @@ const updateSession = (currSession: {
   campaign: string;
 }): void => {
   // update campaign
-  const queryStringCampaign = document.location.search.split("=")[1];
-  if (queryStringCampaign && queryStringCampaign.length > 0) {
-    currSession.campaign = queryStringCampaign;
-
-    if (queryStringCampaign !== currSession.campaign) {
-      currSession.id = `${currSession.id}-${sessionCtr + 1}`;
-    }
+  const campaign = getCampaign(document as Document);
+  if (campaign !== null && campaign !== currSession.campaign) {
+    currSession.id = newSession(currSession.id);
+    currSession.campaign = campaign;
   }
+
   //update expiration
-  const isExpired = (sessionExp: string): boolean =>
-    Date.now() - (new Date(sessionExp) as any) > cookieDuration;
-
   if (isExpired(currSession.expiration as string)) {
-    currSession.id = `${currSession.id}-${sessionCtr + 1}`;
+    currSession.id = newSession(currSession.id);
   }
-  currSession.referrer = document.referrer;
-  currSession.expiration = new Date(expires).toString();
-  cookie.set("instaSession", currSession, {
-    expires: new Date(expires),
-  });
+  currSession = {
+    ...currSession,
+    referrer: document.referrer,
+    expiration: new Date(expires).toString(),
+  };
+  cookie.set("instaSession", currSession);
+  console.log("Updated session: %o", cookie.getJSON("instaSession"));
 };
 
 const newDaySession = (currSession: {
@@ -58,40 +56,31 @@ const newDaySession = (currSession: {
   referrer: string;
   campaign: string;
 }): void => {
-  currSession.id = `${currSession.id}-${sessionCtr + 1}`;
-  currSession.expiration = new Date(expires).toString();
-  cookie.set("instaSession", currSession, {
-    expires: new Date(expires),
-  });
-};
+  currSession = {
+    ...currSession,
+    id: newSession(currSession.id),
+    expiration: new Date(expires).toString(),
+  };
 
-const resetAtMidnight = () => {
-  var now = new Date();
-  var night = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate() + 1, // the next day, ...
-    0,
-    0,
-    0 // ...at 00:00:00 hours
-  );
-  const msToMidnight = night.getTime() - now.getTime();
-
-  setTimeout(function () {
-    // console.log("it's midnight");
-    newDaySession(cookie.getJSON("instaSession"));
-  }, msToMidnight);
+  cookie.set("instaSession", currSession);
+  console.log("New day session: %o", cookie.getJSON("instaSession"));
+  resetAtMidnight();
 };
 
 const getSession = () => {
   resetAtMidnight();
   if (currSession == undefined) {
-    // console.log("!!currSess");
     setDefaultSession();
   } else {
-    // console.log("currSess");
     updateSession(currSession);
   }
 };
 
-export { getSession, setDefaultSession, updateSession, newDaySession, expires };
+export {
+  getSession,
+  setDefaultSession,
+  updateSession,
+  newDaySession,
+  defaultSession,
+  expires,
+};

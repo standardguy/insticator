@@ -1,0 +1,66 @@
+import cookie from "js-cookie";
+import { sessionTimer, newSession, getCampaign, isExpired } from "./utils";
+import { newDaySession, defaultSession, expires } from "./session";
+
+jest.useFakeTimers();
+
+jest.mock("./session");
+const mockNewDaySession = newDaySession as jest.MockedFunction<
+  typeof newDaySession
+>;
+
+describe("The timer", () => {
+  it("Calls the callback", () => {
+    const currSession = Object.assign({}, defaultSession);
+    cookie.set("instaSession", currSession);
+
+    sessionTimer(new Date(expires), mockNewDaySession);
+
+    expect(mockNewDaySession).not.toBeCalled();
+    jest.advanceTimersByTime(35 * 60000);
+    expect(mockNewDaySession).toBeCalled();
+    expect(mockNewDaySession).toBeCalledWith(currSession);
+    expect(mockNewDaySession).toHaveBeenCalledTimes(1);
+    mockNewDaySession.mockClear();
+  });
+});
+
+describe("newSession", () => {
+  it("changes the currecnt session id value", () => {
+    const newId = newSession("testId");
+
+    const uriRegEx = /testId-\d/; // matches strings like "testId-8"
+
+    expect(newId).toMatch(uriRegEx);
+  });
+});
+
+describe("getCampaign", () => {
+  it("returns the campaign in the query string", () => {
+    window.history.pushState({}, "Page Title", "/?campaign=test_mailer");
+    const campaign = getCampaign(document);
+
+    expect(campaign).toEqual("test_mailer");
+  });
+  it("returns a null in no campaign in the query string", () => {
+    window.history.pushState({}, "Page Title", "/?campaign=");
+    const campaign = getCampaign(document);
+
+    expect(campaign).toBeNull();
+  });
+});
+
+describe("isExpired", () => {
+  it("returns true if we are past expiration", () => {
+    const _45minsAgo = Date.now() - 45 * 60000;
+    const expiredState = isExpired(new Date(_45minsAgo).toString());
+
+    expect(expiredState).toBeTruthy();
+  });
+  it("returns false if we are *NOT* past expiration", () => {
+    const _45minsAhead = Date.now() + 45 * 60000;
+    const expState = isExpired(new Date(_45minsAhead).toString());
+
+    expect(expState).toBeFalsy();
+  });
+});

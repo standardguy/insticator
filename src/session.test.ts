@@ -1,84 +1,91 @@
 import cookie from "js-cookie";
+
 import {
-  setDefaultSession,
+  getSession,
   updateSession,
   newDaySession,
-  expires,
+  defaultSession,
 } from "./session";
 
+const uriRegEx = /awd34!@a754-\d/;
+
+afterEach(() => {
+  window.history.pushState({}, "Page Title", "/");
+});
+
 describe("Session - ", () => {
-  const defaultSession = {
-    id: "awd34!@a754",
-    expiration: new Date(expires).toString(),
-    referrer: document.referrer,
-    campaign: "summer_mailer",
-  };
   describe("Is set when", () => {
     it("No session exists", () => {
-      setDefaultSession();
-      const defSess = cookie.getJSON("instaSession");
-      expect(defSess).toEqual(defaultSession);
+      getSession();
+      const newSession = cookie.getJSON("instaSession");
+
+      expect(newSession).toEqual(defaultSession);
+    });
+
+    it("No session exists, but URL has a campaign", () => {
+      cookie.remove("instaSession");
+      window.history.pushState({}, "Page Title", "/?campaign=newest_mailer");
+
+      getSession();
+      const newSession = cookie.getJSON("instaSession");
+
+      expect(newSession.id).toEqual(defaultSession.id);
+      expect(newSession.campaign).toEqual("newest_mailer");
     });
 
     it("An valid session exists", () => {
-      const _15minsAgo = Date.now() - 15 * 60000;
-      const currSession = {
-        id: "awd34!@a754",
-        expiration: new Date(_15minsAgo).toString(),
-        referrer: document.referrer,
-        campaign: "summer_mailer",
-      };
+      const _15minsFromNow = Date.now() + 15 * 60000;
+      const currSession = Object.assign({}, defaultSession, {
+        expiration: new Date(_15minsFromNow).toString(),
+      });
+
       updateSession(currSession);
-      const defSess = cookie.getJSON("instaSession");
-      expect(defSess).toEqual(defaultSession);
+      const newSession = cookie.getJSON("instaSession");
+
+      expect(newSession).toEqual(defaultSession);
     });
   });
+
   describe("Creates a new session when", () => {
     it("the session is stale", () => {
       const _45minsAgo = Date.now() - 45 * 60000;
-      const currSession = {
-        id: "awd34!@a754",
+      const currSession = Object.assign({}, defaultSession, {
         expiration: new Date(_45minsAgo).toString(),
-        referrer: document.referrer,
-        campaign: "summer_mailer",
-      };
-      updateSession(currSession);
-      const defSess = cookie.getJSON("instaSession");
-      defaultSession.id = "awd34!@a754-1";
+      });
 
-      expect(defSess).toEqual(defaultSession);
+      expect(currSession.id).not.toMatch(uriRegEx);
+
+      updateSession(currSession);
+      const newSession = cookie.getJSON("instaSession");
+
+      expect(newSession.id).toMatch(uriRegEx);
     });
 
     it("the campaign changes", () => {
-      const _45minsAgo = Date.now() - 45 * 60000;
-      const currSession = {
-        id: "awd34!@a754",
-        expiration: new Date(_45minsAgo).toString(),
-        referrer: document.referrer,
-        campaign: "summer_mailer",
-      };
-      window.history.pushState({}, "Page Title", "/?campaign=newset_mailer");
+      const currSession = Object.assign({}, defaultSession);
+
+      expect(currSession.campaign).not.toEqual("newest_mailer");
+      expect(currSession.id).not.toMatch(uriRegEx);
+
+      window.history.pushState({}, "Page Title", "/?campaign=newest_mailer");
       updateSession(currSession);
-      defaultSession.id = "awd34!@a754-1";
-      defaultSession.campaign = "newset_mailer";
-      const defSess = cookie.getJSON("instaSession");
-      expect(defSess).toEqual(defaultSession);
+      const newSession = cookie.getJSON("instaSession");
+
+      expect(newSession.campaign).toEqual("newest_mailer");
+      expect(newSession.id).toMatch(uriRegEx);
     });
 
-    it("it turns midnight", () => {
-      const currSession = {
-        id: "awd34!@a754",
-        expiration: new Date(expires).toString(),
-        referrer: document.referrer,
-        campaign: "summer_mailer",
-      };
-      cookie.set("instaSession", currSession);
+    describe("It turns midnight and", () => {
+      it("The newDaySession is called", () => {
+        const currSession = Object.assign({}, defaultSession);
 
-      newDaySession(currSession);
-      const newSession = cookie.getJSON("instaSession");
-      currSession.id = "awd34!@a754-1";
+        expect(currSession.id).not.toMatch(uriRegEx);
 
-      expect(newSession).toEqual(currSession);
+        newDaySession(currSession);
+        const newSession = cookie.getJSON("instaSession");
+
+        expect(newSession.id).toMatch(uriRegEx);
+      });
     });
   });
 });
