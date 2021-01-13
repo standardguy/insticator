@@ -1,8 +1,13 @@
 import cookie from "js-cookie";
 import * as types from "./types";
 import * as constants from "./constants";
-import { newSession, getCampaign, isExpired, resetAtMidnight } from "./utils";
-const currSession = cookie.getJSON("instiSession");
+import {
+  newSession,
+  getCampaign,
+  resetAtMidnight,
+  campaignUpdates,
+  determinUpdateType,
+} from "./utils";
 
 const setDefaultSession = () => {
   const campaign = getCampaign(document as Document);
@@ -15,25 +20,28 @@ const setDefaultSession = () => {
   console.log("Fist session: %o", cookie.getJSON("instiSession"));
 };
 
-const updateSession = (currSession: types.currSession): void => {
+const updateSession = (session: types.currSession): void => {
   let updateAction = "";
-  // update campaign
-  const campaign = getCampaign(document as Document);
-  if (campaign !== null && campaign !== currSession.campaign) {
-    currSession.id = newSession(currSession.id);
-    currSession.campaign = campaign;
-    updateAction = " (Campaign)";
-  } else if (isExpired(currSession.expiration as string)) {
-    //update expiration
-    currSession.id = newSession(currSession.id);
-    updateAction = " (Expired)";
+  const campaign: string = getCampaign(document as Document);
+
+  switch (determinUpdateType(session, campaign)) {
+    case "campaignChange":
+      session = { ...campaignUpdates(session, campaign) };
+      updateAction = " (Campaign)";
+      break;
+    case "expired":
+      session = { ...session, id: newSession(session.id) };
+      updateAction = " (Expired)";
+      break;
+    default:
+      // every session get expiration updated
+      session = {
+        ...session,
+        expiration: new Date(constants.expires).toString(),
+      };
   }
-  currSession = {
-    ...currSession,
-    referrer: document.referrer,
-    expiration: new Date(constants.expires).toString(),
-  };
-  cookie.set("instiSession", currSession);
+
+  cookie.set("instiSession", session);
   console.log(
     "Updated session%s:%o",
     updateAction,
@@ -54,6 +62,7 @@ const newDaySession = (currSession: types.currSession): void => {
 };
 
 const getSession = () => {
+  const currSession = cookie.getJSON("instiSession");
   resetAtMidnight();
   if (currSession == undefined) {
     setDefaultSession();

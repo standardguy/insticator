@@ -1,6 +1,12 @@
 import cookie from "js-cookie";
 import * as constants from "./constants";
-import { sessionTimer, newSession, getCampaign, isExpired } from "./utils";
+import {
+  sessionTimer,
+  newSession,
+  getCampaign,
+  isExpired,
+  campaignUpdates,
+} from "./utils";
 import { newDaySession } from "./session";
 
 jest.useFakeTimers();
@@ -48,6 +54,19 @@ describe("getCampaign", () => {
     const campaign = getCampaign(document);
 
     expect(campaign).toBeNull();
+  });
+});
+
+describe("campaignUpdates", () => {
+  it("set the compaign on the session", () => {
+    const fakeCampaign = "randomMailer";
+    const currSession = { ...constants.defaultSession };
+
+    expect(currSession.campaign).not.toEqual(fakeCampaign);
+
+    const resp = campaignUpdates(currSession, fakeCampaign);
+
+    expect(resp.campaign).toEqual(fakeCampaign);
   });
 });
 

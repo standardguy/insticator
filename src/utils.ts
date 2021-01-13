@@ -1,4 +1,6 @@
 import cookie from "js-cookie";
+import * as types from "./types";
+import * as constants from "./constants";
 import { newDaySession } from "./session";
 
 const sessionTimer = (timeToExpire: Date, callback: Function) => {
@@ -38,4 +40,35 @@ const isExpired = (sessionExp: string): boolean => {
   return Date.now() - new Date(sessionExp).getTime() > 0;
 };
 
-export { sessionTimer, newSession, getCampaign, isExpired, resetAtMidnight };
+const campaignUpdates = (session: types.currSession, campaign: string) => {
+  session.id = newSession(session.id);
+  session.campaign = campaign;
+  return {
+    ...session,
+    referrer: document.referrer,
+    expiration: new Date(constants.expires).toString(),
+  };
+};
+
+const determinUpdateType = (
+  session: types.currSession,
+  campaign: string
+): string => {
+  if (campaign !== null && campaign !== session.campaign) {
+    return "campaignChange";
+  } else if (isExpired(session.expiration as string)) {
+    return "expired";
+  } else {
+    return "updateExp";
+  }
+};
+
+export {
+  sessionTimer,
+  newSession,
+  getCampaign,
+  isExpired,
+  resetAtMidnight,
+  campaignUpdates,
+  determinUpdateType,
+};
