@@ -3,7 +3,7 @@ import * as constants from "./constants";
 
 import { getSession, updateSession, newDaySession } from "./session";
 
-const uriRegEx = /awd34!@a754-\d/;
+const uriRegEx = /awd34!@a754-\d*/;
 
 afterEach(() => {
   window.history.pushState({}, "Page Title", "/");
