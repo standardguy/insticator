@@ -32,7 +32,26 @@ function bundle() {
     .pipe(source("InsticatorSession.js"))
     .pipe(buffer())
     .pipe(sourcemaps.init({ loadMaps: true }))
-    .pipe(uglify())
+    .pipe(
+      uglify({
+        mangle: { toplevel: true },
+        compress: {
+          dead_code: true,
+          conditionals: true,
+          booleans: true,
+          unused: true,
+          if_return: true,
+          join_vars: true,
+          drop_console: false,
+          passes: 3,
+          unsafe: true,
+        },
+        output: {
+          beautify: false,
+          comments: true,
+        },
+      })
+    )
     .pipe(sourcemaps.write("./"))
     .pipe(gulp.dest("dist"));
 }
