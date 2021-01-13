@@ -6,7 +6,7 @@ const sessionTimer = (timeToExpire: Date, callback: Function) => {
   const timerDuration = timeToExpire.getTime() - now.getTime();
 
   setTimeout(function () {
-    callback(cookie.getJSON("instaSession"));
+    callback(cookie.getJSON("instiSession"));
   }, timerDuration);
 };
 

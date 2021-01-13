@@ -13,17 +13,17 @@ describe("Session - ", () => {
   describe("Is set when", () => {
     it("No session exists", () => {
       getSession();
-      const newSession = cookie.getJSON("instaSession");
+      const newSession = cookie.getJSON("instiSession");
 
       expect(newSession).toEqual(constants.defaultSession);
     });
 
     it("No session exists, but URL has a campaign", () => {
-      cookie.remove("instaSession");
+      cookie.remove("instiSession");
       window.history.pushState({}, "Page Title", "/?campaign=newest_mailer");
 
       getSession();
-      const newSession = cookie.getJSON("instaSession");
+      const newSession = cookie.getJSON("instiSession");
 
       expect(newSession.id).toEqual(constants.defaultSession.id);
       expect(newSession.campaign).toEqual("newest_mailer");
@@ -37,7 +37,7 @@ describe("Session - ", () => {
       };
 
       updateSession(currSession);
-      const newSession = cookie.getJSON("instaSession");
+      const newSession = cookie.getJSON("instiSession");
 
       expect(newSession).toEqual(constants.defaultSession);
     });
@@ -54,7 +54,7 @@ describe("Session - ", () => {
       expect(currSession.id).not.toMatch(uriRegEx);
 
       updateSession(currSession);
-      const newSession = cookie.getJSON("instaSession");
+      const newSession = cookie.getJSON("instiSession");
 
       expect(newSession.id).toMatch(uriRegEx);
     });
@@ -67,7 +67,7 @@ describe("Session - ", () => {
 
       window.history.pushState({}, "Page Title", "/?campaign=newest_mailer");
       updateSession(currSession);
-      const newSession = cookie.getJSON("instaSession");
+      const newSession = cookie.getJSON("instiSession");
 
       expect(newSession.campaign).toEqual("newest_mailer");
       expect(newSession.id).toMatch(uriRegEx);
@@ -80,7 +80,7 @@ describe("Session - ", () => {
         expect(currSession.id).not.toMatch(uriRegEx);
 
         newDaySession(currSession);
-        const newSession = cookie.getJSON("instaSession");
+        const newSession = cookie.getJSON("instiSession");
 
         expect(newSession.id).toMatch(uriRegEx);
       });

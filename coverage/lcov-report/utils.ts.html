@@ -159,7 +159,7 @@ const sessionTimer = (timeToExpire: Date, callback: Function) =&gt; {
   const msToMidnight = timeToExpire.getTime() - now.getTime();
 &nbsp;
   setTimeout(function () {
-    callback(cookie.getJSON("instaSession"));
+    callback(cookie.getJSON("instiSession"));
   }, msToMidnight);
 };
 &nbsp;

@@ -1,7 +1,7 @@
 import cookie from "js-cookie";
 import * as constants from "./constants";
 import { newSession, getCampaign, isExpired, resetAtMidnight } from "./utils";
-const currSession = cookie.getJSON("instaSession");
+const currSession = cookie.getJSON("instiSession");
 
 const setDefaultSession = () => {
   const campaign = getCampaign(document as Document);
@@ -10,8 +10,8 @@ const setDefaultSession = () => {
     ...constants.defaultSession,
     campaign: campaignStr,
   };
-  cookie.set("instaSession", firstSession);
-  console.log("Fist session: %o", cookie.getJSON("instaSession"));
+  cookie.set("instiSession", firstSession);
+  console.log("Fist session: %o", cookie.getJSON("instiSession"));
 };
 
 const updateSession = (currSession: {
@@ -39,11 +39,11 @@ const updateSession = (currSession: {
     referrer: document.referrer,
     expiration: new Date(constants.expires).toString(),
   };
-  cookie.set("instaSession", currSession);
+  cookie.set("instiSession", currSession);
   console.log(
     "Updated session%s:%o",
     updateAction,
-    cookie.getJSON("instaSession")
+    cookie.getJSON("instiSession")
   );
 };
 
@@ -59,8 +59,8 @@ const newDaySession = (currSession: {
     expiration: new Date(constants.expires).toString(),
   };
 
-  cookie.set("instaSession", currSession);
-  console.log("New day session: %o", cookie.getJSON("instaSession"));
+  cookie.set("instiSession", currSession);
+  console.log("New day session: %o", cookie.getJSON("instiSession"));
   resetAtMidnight();
 };
 

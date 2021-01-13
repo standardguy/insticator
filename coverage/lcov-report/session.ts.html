@@ -235,7 +235,7 @@ import { newSession, getCampaign, isExpired, resetAtMidnight } from "./utils";
 &nbsp;
 const cookieDuration = 30 * 60000; // mins * millisecs in a minute
 const expires = Date.now() + cookieDuration;
-const currSession = cookie.getJSON("instaSession");
+const currSession = cookie.getJSON("instiSession");
 &nbsp;
 const defaultSession = {
   id: "awd34!@a754",
@@ -251,8 +251,8 @@ const setDefaultSession = () =&gt; {
     ...defaultSession,
     campaign: campaignStr,
   };
-  cookie.set("instaSession", firstSession);
-  console.log("Fist session: %o", cookie.getJSON("instaSession"));
+  cookie.set("instiSession", firstSession);
+  console.log("Fist session: %o", cookie.getJSON("instiSession"));
 };
 &nbsp;
 const updateSession = (currSession: {
@@ -277,8 +277,8 @@ const updateSession = (currSession: {
     referrer: document.referrer,
     expiration: new Date(expires).toString(),
   };
-  cookie.set("instaSession", currSession);
-  console.log("Updated session: %o", cookie.getJSON("instaSession"));
+  cookie.set("instiSession", currSession);
+  console.log("Updated session: %o", cookie.getJSON("instiSession"));
 };
 &nbsp;
 const newDaySession = (currSession: {
@@ -293,8 +293,8 @@ const newDaySession = (currSession: {
     expiration: new Date(expires).toString(),
   };
 &nbsp;
-  cookie.set("instaSession", currSession);
-  console.log("New day session: %o", cookie.getJSON("instaSession"));
+  cookie.set("instiSession", currSession);
+  console.log("New day session: %o", cookie.getJSON("instiSession"));
   resetAtMidnight();
 };
 &nbsp;
