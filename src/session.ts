@@ -4,13 +4,6 @@ import * as constants from "./constants";
 import { newSession, getCampaign, isExpired, resetAtMidnight } from "./utils";
 const currSession = cookie.getJSON("instiSession");
 
-// type currSession = {
-//   id: string;
-//   expiration: string;
-//   referrer: string;
-//   campaign: string;
-// };
-
 const setDefaultSession = () => {
   const campaign = getCampaign(document as Document);
   const campaignStr = campaign ? campaign : constants.defaultSession.campaign;
