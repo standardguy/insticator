@@ -1,7 +1,15 @@
 import cookie from "js-cookie";
+import * as types from "./types";
 import * as constants from "./constants";
 import { newSession, getCampaign, isExpired, resetAtMidnight } from "./utils";
 const currSession = cookie.getJSON("instiSession");
+
+// type currSession = {
+//   id: string;
+//   expiration: string;
+//   referrer: string;
+//   campaign: string;
+// };
 
 const setDefaultSession = () => {
   const campaign = getCampaign(document as Document);
@@ -14,12 +22,7 @@ const setDefaultSession = () => {
   console.log("Fist session: %o", cookie.getJSON("instiSession"));
 };
 
-const updateSession = (currSession: {
-  id: string;
-  expiration: string;
-  referrer: string;
-  campaign: string;
-}): void => {
+const updateSession = (currSession: types.currSession): void => {
   let updateAction = "";
   // update campaign
   const campaign = getCampaign(document as Document);
@@ -47,12 +50,7 @@ const updateSession = (currSession: {
   );
 };
 
-const newDaySession = (currSession: {
-  id: string;
-  expiration: string;
-  referrer: string;
-  campaign: string;
-}): void => {
+const newDaySession = (currSession: types.currSession): void => {
   currSession = {
     ...currSession,
     id: newSession(currSession.id),
