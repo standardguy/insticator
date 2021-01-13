@@ -73,6 +73,25 @@ describe("Session - ", () => {
       expect(newSession.id).toMatch(uriRegEx);
     });
 
+    it("the session is stale AND the campaign changes", () => {
+      const _45minsAgo = Date.now() - 45 * 60000;
+      const currSession = {
+        ...constants.defaultSession,
+        expiration: new Date(_45minsAgo).toString(),
+      };
+      window.history.pushState({}, "Page Title", "/?campaign=newest_mailer");
+
+      expect(currSession.campaign).not.toEqual("newest_mailer");
+      expect(currSession.id).not.toMatch(uriRegEx);
+
+      updateSession(currSession);
+      const newSession = cookie.getJSON("instiSession");
+
+      expect(newSession.campaign).toEqual("newest_mailer");
+      expect(newSession.id).not.toMatch(/awd34!@a754-\d*-\d*/);
+      expect(newSession.id).toMatch(uriRegEx);
+    });
+
     describe("It turns midnight and", () => {
       it("The newDaySession is called", () => {
         const currSession = { ...constants.defaultSession };

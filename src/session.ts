@@ -23,10 +23,8 @@ const updateSession = (currSession: types.currSession): void => {
     currSession.id = newSession(currSession.id);
     currSession.campaign = campaign;
     updateAction = " (Campaign)";
-  }
-
-  //update expiration
-  if (isExpired(currSession.expiration as string)) {
+  } else if (isExpired(currSession.expiration as string)) {
+    //update expiration
     currSession.id = newSession(currSession.id);
     updateAction = " (Expired)";
   }
