@@ -1,12 +1,7 @@
 import cookie from "js-cookie";
 import * as constants from "./constants";
 
-import {
-  getSession,
-  updateSession,
-  newDaySession,
-  defaultSession,
-} from "./session";
+import { getSession, updateSession, newDaySession } from "./session";
 
 const uriRegEx = /awd34!@a754-\d/;
 
@@ -20,7 +15,7 @@ describe("Session - ", () => {
       getSession();
       const newSession = cookie.getJSON("instaSession");
 
-      expect(newSession).toEqual(defaultSession);
+      expect(newSession).toEqual(constants.defaultSession);
     });
 
     it("No session exists, but URL has a campaign", () => {
@@ -30,27 +25,27 @@ describe("Session - ", () => {
       getSession();
       const newSession = cookie.getJSON("instaSession");
 
-      expect(newSession.id).toEqual(defaultSession.id);
+      expect(newSession.id).toEqual(constants.defaultSession.id);
       expect(newSession.campaign).toEqual("newest_mailer");
     });
 
     it("An valid session exists", () => {
       const _15minsFromNow = Date.now() + 15 * 60000;
-      const currSession = Object.assign({}, defaultSession, {
+      const currSession = Object.assign({}, constants.defaultSession, {
         expiration: new Date(_15minsFromNow).toString(),
       });
 
       updateSession(currSession);
       const newSession = cookie.getJSON("instaSession");
 
-      expect(newSession).toEqual(defaultSession);
+      expect(newSession).toEqual(constants.defaultSession);
     });
   });
 
   describe("Creates a new session when", () => {
     it("the session is stale", () => {
       const _45minsAgo = Date.now() - 45 * 60000;
-      const currSession = Object.assign({}, defaultSession, {
+      const currSession = Object.assign({}, constants.defaultSession, {
         expiration: new Date(_45minsAgo).toString(),
       });
 
@@ -63,7 +58,7 @@ describe("Session - ", () => {
     });
 
     it("the campaign changes", () => {
-      const currSession = Object.assign({}, defaultSession);
+      const currSession = Object.assign({}, constants.defaultSession);
 
       expect(currSession.campaign).not.toEqual("newest_mailer");
       expect(currSession.id).not.toMatch(uriRegEx);
@@ -78,7 +73,7 @@ describe("Session - ", () => {
 
     describe("It turns midnight and", () => {
       it("The newDaySession is called", () => {
-        const currSession = Object.assign({}, defaultSession);
+        const currSession = Object.assign({}, constants.defaultSession);
 
         expect(currSession.id).not.toMatch(uriRegEx);
 

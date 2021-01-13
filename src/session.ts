@@ -5,18 +5,11 @@ import { newSession, getCampaign, isExpired, resetAtMidnight } from "./utils";
 const currSession = cookie.getJSON("instaSession");
 let updateAction = "";
 
-const defaultSession = {
-  id: "awd34!@a754",
-  expiration: new Date(constants.expires).toString(),
-  referrer: document.referrer,
-  campaign: "summer_mailer",
-};
-
 const setDefaultSession = () => {
   const campaign = getCampaign(document as Document);
-  const campaignStr = campaign ? campaign : defaultSession.campaign;
+  const campaignStr = campaign ? campaign : constants.defaultSession.campaign;
   let firstSession = {
-    ...defaultSession,
+    ...constants.defaultSession,
     campaign: campaignStr,
   };
   cookie.set("instaSession", firstSession);
@@ -82,10 +75,4 @@ const getSession = () => {
   }
 };
 
-export {
-  getSession,
-  setDefaultSession,
-  updateSession,
-  newDaySession,
-  defaultSession,
-};
+export { getSession, setDefaultSession, updateSession, newDaySession };

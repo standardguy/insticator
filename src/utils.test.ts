@@ -1,7 +1,7 @@
 import cookie from "js-cookie";
 import * as constants from "./constants";
 import { sessionTimer, newSession, getCampaign, isExpired } from "./utils";
-import { newDaySession, defaultSession } from "./session";
+import { newDaySession } from "./session";
 
 jest.useFakeTimers();
 
@@ -12,7 +12,7 @@ const mockNewDaySession = newDaySession as jest.MockedFunction<
 
 describe("The timer", () => {
   it("Calls the callback", () => {
-    const currSession = Object.assign({}, defaultSession);
+    const currSession = Object.assign({}, constants.defaultSession);
     cookie.set("instaSession", currSession);
 
     sessionTimer(new Date(constants.expires), mockNewDaySession);
