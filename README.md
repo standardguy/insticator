@@ -32,7 +32,7 @@ Run tests once
 yarn test
 ```
 
-or every time you change a file (during dev)
+or every time you change a file (as during dev)
 
 ```
 yarn test:watch
@@ -40,7 +40,7 @@ yarn test:watch
 
 #### Build
 
-Build every time you change a file (during dev)
+Build every time you change a file (as during dev)
 
 ```
 yarn build
