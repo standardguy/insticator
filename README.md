@@ -8,7 +8,7 @@ You can check it out [here on my GitHub page.](https://standardguy.github.io/ins
 
 ## How to build
 
-<img src="./markdown/info-markup.svg" />
+<img src="./markdown/info-markup.svg" style="margin-bottom: -20px"/>
 Just a few easy steps:
 - Clone this repo
 - Get into the instictor directory
