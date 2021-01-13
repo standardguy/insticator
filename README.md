@@ -1,10 +1,12 @@
-#Insticator Take Home Test
+# Insticator Take Home Test
 
-##Overview
+## Overview
+
 This is simple Node-based library built with Typescript, Jest, Browserify, uglify, grunt, and gh-pages.
 It starts and updates a browser-based session object based on user activity.
+You can check it out [here on my GitHub page.](https://standardguy.github.io/insticator/index.html)
 
-##How to build
+## How to build
 
 <img src="./markdown/info-markup.svg" />
 Just a few easy steps:
@@ -18,9 +20,10 @@ cd insticator
 yarn
 ```
 
-###Useful commands
+### Useful commands
 
-####Tests
+#### Tests
+
 Run tests once
 
 ```
@@ -33,20 +36,22 @@ or every time you change a file (during dev)
 yarn test:watch
 ```
 
-####Build
+#### Build
+
 Build every time you change a file (during dev)
 
 ```
 yarn build
 ```
 
-####Deploy to your github pages
+#### Deploy to your github pages
 
 ```
 yarn deploy
 ```
 
-##How to see it in action
+## How to see it in action
+
 To enjoy the InstactorSession experience you'll need to build the project (see commands above) and then, either
 
 - use VScode's LivesServer plugin to run the `dist/index.html` page form your IDE, or
