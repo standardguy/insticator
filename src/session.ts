@@ -1,9 +1,7 @@
 import cookie from "js-cookie";
 import * as constants from "./constants";
 import { newSession, getCampaign, isExpired, resetAtMidnight } from "./utils";
-
 const currSession = cookie.getJSON("instaSession");
-let updateAction = "";
 
 const setDefaultSession = () => {
   const campaign = getCampaign(document as Document);

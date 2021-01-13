@@ -12,7 +12,7 @@ const mockNewDaySession = newDaySession as jest.MockedFunction<
 
 describe("The timer", () => {
   it("Calls the callback", () => {
-    const currSession = Object.assign({}, constants.defaultSession);
+    const currSession = { ...constants.defaultSession };
     cookie.set("instaSession", currSession);
 
     sessionTimer(new Date(constants.expires), mockNewDaySession);
