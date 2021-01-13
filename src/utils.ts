@@ -2,7 +2,7 @@ import cookie from "js-cookie";
 import { newDaySession } from "./session";
 
 const sessionTimer = (timeToExpire: Date, callback: Function) => {
-  var now = new Date();
+  const now = new Date();
   const timerDuration = timeToExpire.getTime() - now.getTime();
 
   setTimeout(function () {
@@ -11,8 +11,8 @@ const sessionTimer = (timeToExpire: Date, callback: Function) => {
 };
 
 const resetAtMidnight = () => {
-  var now = new Date();
-  var midnight = new Date(
+  const now = new Date();
+  const midnight = new Date(
     now.getFullYear(),
     now.getMonth(),
     now.getDate() + 1, // the next day, ...
