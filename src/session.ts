@@ -49,14 +49,14 @@ const updateSession = (session: types.currSession): void => {
   );
 };
 
-const newDaySession = (currSession: types.currSession): void => {
-  currSession = {
-    ...currSession,
-    id: newSession(currSession.id),
+const newDaySession = (session: types.currSession): void => {
+  session = {
+    ...session,
+    id: newSession(session.id),
     expiration: new Date(constants.expires).toString(),
   };
 
-  cookie.set("instiSession", currSession);
+  cookie.set("instiSession", session);
   console.log("New day session: %o", cookie.getJSON("instiSession"));
   resetAtMidnight();
 };
