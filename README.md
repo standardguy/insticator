@@ -9,7 +9,9 @@ You can check it out [here on my GitHub page.](https://standardguy.github.io/ins
 ## How to build
 
 <img src="./markdown/info-markup.svg" />
+
 Just a few easy steps:
+
 - Clone this repo
 - Get into the instictor directory
 - Run yarn
@@ -52,9 +54,9 @@ yarn deploy
 
 ## How to see it in action
 
-To enjoy the InstictorSession experience you'll need to build the project (see commands above) and then, either
+To enjoy the InsticatorSession experience you'll need to build the project (see commands above) and then, either
 
-- use VScode's LivesServer plugin to run the `dist/index.html` page form your IDE, or
+- use VScode's LiveServer plugin to run the `dist/index.html` page form your IDE, or
 - post the `dist` folder to a server.
 
 Once `dist` is hosted you can navigate to the `index.html` and `index2.html` pages and reload and navigate between them.
